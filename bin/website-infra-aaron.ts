@@ -15,7 +15,7 @@ new WebsiteInfraAaronStack(app, 'WebsiteInfraAaronStack', {
 
   /* Uncomment the next line if you know exactly what Account and Region you
    * want to deploy the stack to. */
-    env: { account: 'YOURACCOUNTNUMHERE', region: 'eu-west-2' },
+    env: { account: '303929685909', region: 'eu-west-2' },
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
 });
