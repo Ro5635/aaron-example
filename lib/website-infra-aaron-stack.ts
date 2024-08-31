@@ -32,7 +32,7 @@ export class WebsiteInfraAaronStack extends cdk.Stack {
     });
 
     const staticSiteBucket = new Bucket(this, 'StaticSiteBucket', {
-      bucketName: 'atw-demo-static-site-bucket',
+      bucketName: 'static-aarondrinksjava-com',
       removalPolicy: cdk.RemovalPolicy.RETAIN,
     });
 
