@@ -42,6 +42,19 @@ export class WebsiteInfraAaronStack extends cdk.Stack {
       },
     });
 
+    // In order to stop bucket sprawl I would recommend using a single bucket for logs
+    // across your entire account, with prefixes used to separate logs sets
+    const loggingBucket = new Bucket(this, 'LogingBucket', {
+      bucketName: 'logging-aaron-t-w',
+      removalPolicy: cdk.RemovalPolicy.RETAIN,
+      blockPublicAccess: {
+        blockPublicAcls: true,
+        blockPublicPolicy: true,
+        ignorePublicAcls: true,
+        restrictPublicBuckets: true,
+      },
+    });
+
     // Create Identity for CloudFront to read from the bucket
     const staticSiteBucketOriginAccessIdentity = new OriginAccessIdentity(this, 'StaticSiteBucketOriginAccessIdentity', {
       comment: 'Static Site Bucket OAI',
@@ -59,8 +72,9 @@ export class WebsiteInfraAaronStack extends cdk.Stack {
             {
               isDefaultBehavior: true,
               compress: true,
+              defaultTtl: cdk.Duration.seconds(900),
+              minTtl: cdk.Duration.seconds(60),
             }
-
           ],
         },
       ],
@@ -80,6 +94,27 @@ export class WebsiteInfraAaronStack extends cdk.Stack {
       enableIpV6: true,
       httpVersion: HttpVersion.HTTP2_AND_3,
       viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+      errorConfigurations: [
+        // I would recommend using a custom error page that can be configured below:
+        {
+          errorCode: 403,
+          responseCode: 200,
+          responsePagePath: '/index.html',
+          errorCachingMinTtl: 0,
+        },
+        {
+          errorCode: 404,
+          responseCode: 204,
+          responsePagePath: '/index.html',
+          errorCachingMinTtl: 0,
+        },
+      ],
+      // Apache style logging of requests
+      loggingConfig: {
+        bucket: loggingBucket,
+        includeCookies: false,
+        prefix: 'logs/aarondrinksjava.com/v0/',
+      }
     })
 
   const aRecordStaticSite = new ARecord(this, 'AAlliasRecordForStaticSite', {
