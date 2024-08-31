@@ -76,14 +76,14 @@ export class WebsiteInfraAaronStack extends cdk.Stack {
       viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
     })
 
-  const aRecordBCN = new ARecord(this, 'AAlliasRecordForStaticSite', {
+  const aRecordStaticSite = new ARecord(this, 'AAlliasRecordForStaticSite', {
     zone: hostedZoneATW,
     target: aws_route53.RecordTarget.fromAlias(new aws_route53_targets.CloudFrontTarget(cloudFrontDistribution)),
     recordName: '',
-    comment: 'Alias record for bcn.robertcurran.uk',
+    comment: `Alias record for ${targetDomainName}`,
   });
 
-  const aaaRecordBCN = new AaaaRecord(this, 'AAAAlliasRecordForStaticSite', {
+  const aaaRecordStaticSite = new AaaaRecord(this, 'AAAAlliasRecordForStaticSite', {
     zone: hostedZoneATW,
     target: aws_route53.RecordTarget.fromAlias(new aws_route53_targets.CloudFrontTarget(cloudFrontDistribution)),
     recordName: '',
