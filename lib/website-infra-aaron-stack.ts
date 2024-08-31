@@ -34,6 +34,12 @@ export class WebsiteInfraAaronStack extends cdk.Stack {
     const staticSiteBucket = new Bucket(this, 'StaticSiteBucket', {
       bucketName: 'static-aarondrinksjava-com',
       removalPolicy: cdk.RemovalPolicy.RETAIN,
+      blockPublicAccess: {
+        blockPublicAcls: true,
+        blockPublicPolicy: true,
+        ignorePublicAcls: true,
+        restrictPublicBuckets: true,
+      },
     });
 
     // Create Identity for CloudFront to read from the bucket
